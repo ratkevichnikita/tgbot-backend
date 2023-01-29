@@ -4,39 +4,44 @@ const token = '5939397200:AAH9rcFroMXSbWnuhTQcybx_NoIWt-rnAzs'
 const webAppUrl = 'https://1ab9-103-100-173-232.ap.ngrok.io/';
 const bot = new TelegramBot(token, {polling: true});
 
+
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
-    if(text === '/start') {
 
-        // await bot.sendMessage(chatId,'Ниже появится кнопка',{
+    if(text === '/start') {
+        // await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
         //     reply_markup: {
         //         keyboard: [
-        //             [{text:'заполнить форму', web_app: {url:webAppUrl}}]
+        //             [{text: 'Заполнить форму', web_app: {url: webAppUrl + '/form'}}]
         //         ]
         //     }
         // })
-        await bot.sendMessage(chatId,'заходите в наш интернет магазин',{
+
+        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
                 inline_keyboard: [
-                    [{text:'сделать заказ', web_app: {url:webAppUrl}}]
+                    [{text: 'Сделать заказ', web_app: {url: webAppUrl}}]
                 ]
             }
         })
     }
-    console.log('msg?.web_app_data?', msg?.web_app_data)
+
     if(msg?.web_app_data?.data) {
         try {
-            const data = JSON.parse(msg?.web_app_data?.data);
-            await bot.sendMessage(chatId, 'Спасибо за ваш заказ. Наш енджер свяжится с вами в ближайшее время для подтверждения')
-            await bot.sendMessage(chatId,'Ваш способ оплаты', data.payment)
-        } catch (error) {
-            console.log(error)
+            const data = JSON.parse(msg?.web_app_data?.data)
+            console.log(data)
+            await bot.sendMessage(chatId, 'Спасибо за обратную связь!')
+            await bot.sendMessage(chatId, 'Ваша страна: ');
+            await bot.sendMessage(chatId, 'Ваша улица: ' );
 
+            setTimeout(async () => {
+                await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
+            }, 3000)
+        } catch (e) {
+            console.log(e);
         }
     }
-    // send a message to the chat acknowledging receipt of their message
-    bot.sendMessage(chatId, 'Received your message');
 });
 
 
