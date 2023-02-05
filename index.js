@@ -3,14 +3,14 @@ const express = require('express');
 const cors = require('cors');
 
 const token = '5939397200:AAH9rcFroMXSbWnuhTQcybx_NoIWt-rnAzs'
-const webAppUrl = 'https://fe8e-103-100-173-232.ap.ngrok.io';
+const webAppUrl = 'https://github.com/ratkevichnikita/tgbot';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-
+console.log('start')
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
@@ -54,6 +54,7 @@ bot.on('message', async (msg) => {
 });
 
 app.post('/web-data', async (req, res) => {
+    console.log('1')
     const {queryId, productsInfo = [], payment, totalSum, location} = req.body;
     const info = productsInfo.flatMap(item => ` ${item.title} - ${item.count} шт. `)
     const message = `Ваш заказ: ${info}. На сумму ${totalSum}`
@@ -73,6 +74,6 @@ app.post('/web-data', async (req, res) => {
 })
 
 const PORT = 8000;
-
+app.listen(PORT, () => console.log('server started on PORT ' + PORT))
 
 
