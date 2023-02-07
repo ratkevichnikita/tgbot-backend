@@ -3,14 +3,17 @@ const express = require('express');
 const cors = require('cors');
 
 const token = '5939397200:AAH9rcFroMXSbWnuhTQcybx_NoIWt-rnAzs'
-const webAppUrl = 'https://github.com/ratkevichnikita/tgbot';
+const webAppUrl = 'https://ratkevichnikita.github.io/tgbot/';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-console.log('start')
+// app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET','POST']
+}));
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
