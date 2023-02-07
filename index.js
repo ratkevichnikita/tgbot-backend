@@ -40,7 +40,7 @@ bot.on('message', async (msg) => {
         try {
             const data = JSON.parse(msg?.web_app_data?.data)
             console.log(data)
-            const info = data.productInfo.flatMap(item => ` ${item.title} - ${item.count} шт. `)
+            const info = data.productInfo?.map(item => ` ${item.title} - ${item.count} шт. `).join('')
             const message = `Ваш заказ: ${info}`
 
             await bot.sendMessage(chatId, message)
