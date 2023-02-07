@@ -1,4 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
+//const fs = require("fs");
+//const https = require("https");
+//var privateKey  = fs.readFileSync('sslcert/key.pem');
+//var certificate = fs.readFileSync('sslcert/cert.pem');
+//var credentials = {key: privateKey, cert: certificate};
 const express = require('express');
 const cors = require('cors');
 
@@ -9,8 +14,11 @@ const bot = new TelegramBot(token, {polling: true});
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-
+//app.use(cors());
+app.use(cors({
+    origin: '*',
+	methods: ['GET','POST']
+}));
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
@@ -72,7 +80,25 @@ app.post('/web-data', async (req, res) => {
     }
 })
 
+app.get('/web-data', async (req, res) => {
+    const message = `test`
+    try {
+        await bot.answerWebAppQuery(queryId, {
+            type: 'article',
+            id: queryId,
+            title: 'Успешная покупка',
+            input_message_content: {
+                message_text: message
+            }
+        })
+        return res.status(200).json({});
+    } catch (e) {
+        return res.status(500).json({})
+    }
+})
+
 const PORT = 8000;
 
-
+//https.createServer(credentials, app).listen(PORT, () => console.log('server started on PORT ' + PORT))
+app.listen(PORT, () => console.log('server started on PORT ' + PORT))
 
