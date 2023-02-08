@@ -8,16 +8,16 @@ const express = require('express');
 const cors = require('cors');
 
 const token = '5939397200:AAH9rcFroMXSbWnuhTQcybx_NoIWt-rnAzs'
-const webAppUrl = 'https://fe8e-103-100-173-232.ap.ngrok.io';
+const webAppUrl = 'https://ratkevichnikita.github.io/tgbot/';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
 
 app.use(express.json());
-//app.use(cors());
+// app.use(cors());
 app.use(cors({
     origin: '*',
-	methods: ['GET','POST']
+    methods: ['GET','POST']
 }));
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
@@ -45,7 +45,7 @@ bot.on('message', async (msg) => {
         try {
             const data = JSON.parse(msg?.web_app_data?.data)
             console.log(data)
-            const info = data.productInfo.flatMap(item => ` ${item.title} - ${item.count} шт. `)
+            const info = data.productInfo?.map(item => ` ${item.title} - ${item.count} шт. `).join('')
             const message = `Ваш заказ: ${info}`
 
             await bot.sendMessage(chatId, message)
@@ -62,26 +62,10 @@ bot.on('message', async (msg) => {
 });
 
 app.post('/web-data', async (req, res) => {
-    const {queryId, productsInfo = [], payment, totalSum, location} = req.body;
-    const info = productsInfo.flatMap(item => ` ${item.title} - ${item.count} шт. `)
+    console.log('1')
+    const {queryId, productInfo = [], payment, totalSum, location} = req.body;
+    const info = productInfo.flatMap(item => ` ${item.title} - ${item.count} шт. `)
     const message = `Ваш заказ: ${info}. На сумму ${totalSum}`
-    try {
-        await bot.answerWebAppQuery(queryId, {
-            type: 'article',
-            id: queryId,
-            title: 'Успешная покупка',
-            input_message_content: {
-                message_text: message
-            }
-        })
-        return res.status(200).json({});
-    } catch (e) {
-        return res.status(500).json({})
-    }
-})
-
-app.get('/web-data', async (req, res) => {
-    const message = `test`
     try {
         await bot.answerWebAppQuery(queryId, {
             type: 'article',
