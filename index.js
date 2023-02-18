@@ -46,7 +46,7 @@ bot.on('message', async (msg) => {
       
 
 app.post('/web-data', async (req, res) => {
-    const {queryId, productInfo = [], payment, totalSum, location, userName} = req.body;
+    const {queryId, productInfo = [], payment, totalSum, location, userName, phone} = req.body;
     const info = productInfo.flatMap(item => ` ${item.title} - ${item.count} шт. `);
     const message = `Ваш заказ: ${info}. На сумму ${totalSum}. Способ оплаты: ${payment}. Локация: ${location}.`
 
@@ -54,7 +54,8 @@ app.post('/web-data', async (req, res) => {
     На сумму ${totalSum}. \n
     Способ оплаты: ${payment}. \n
     Локация: ${location}. \n
-    Пользователь: ${userName}
+    Пользователь: ${userName}. \n
+    Телефон: ${phone}
     `
     axios.post(`https://api.telegram.org/bot${process.env.TOKEN}/sendMessage?chat_id=@smart_seeds_toys&text=${message_admin}`)
     
