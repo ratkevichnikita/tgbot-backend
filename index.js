@@ -1,12 +1,10 @@
+require('dotenv').config()
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 
-const token = '6101662912:AAFqsGNZ6vrNq7tbkRwaNJPy0a4QsU9hyFg'
-const webAppUrl = 'https://ratkevichnikita.github.io/tgbot/';
-
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(process.env.TOKEN, {polling: true});
 const app = express();
 
 app.use(express.json());
@@ -58,7 +56,7 @@ app.post('/web-data', async (req, res) => {
     Локация: ${location}. \n
     Пользователь: ${userName}
     `
-    axios.post(`https://api.telegram.org/bot${token}/sendMessage?chat_id=@smart_seeds_toys&text=${message_admin}`)
+    axios.post(`https://api.telegram.org/bot${process.env.TOKEN}/sendMessage?chat_id=@smart_seeds_toys&text=${message_admin}`)
     
     try {
         await bot.answerWebAppQuery(queryId, {
